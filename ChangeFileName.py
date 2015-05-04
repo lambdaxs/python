@@ -1,10 +1,16 @@
 #coding=utf-8
 import os
+import platform
 
 
 #改后缀，修改文件名，
-path = '/Users/xiaos/dir/'
+# path = 'c://dir//'
+# path = '/Users/xiaos/dir/'
+supPath = '/Users/xiaos/Desktop/video/javaWeb/'
+# path = '/Users/xiaos/Desktop/video/javaWeb/01-Java基础增强/'
+
 hrefStr = '_helloworld_'
+osList = ['Lunix','Darwin','Ubuntu']
 # lastStr = 'xxx'
 
 #新建同类型测试文件
@@ -14,18 +20,50 @@ def setUpFiles(path,hrefStr):
 	for i in range(10):
 		list.append(path+hrefStr+'b%s.txt' %(i))
 
-	for i in xrange(10):
+	for i in range(10):
 		f = open(list[i],'w')
 		f.close()
 
+	print("在"+path+"目录下生成了测试文件")
+
+
+def dirName(supPath):
+	list = os.listdir(supPath)
+	if(platform.system() in osList):
+		del list[0]
+	return list
+
+pathList = dirName(supPath)[2:-1]
 
 #返回path目录下的文件全名
 def filesAllName(path):
 	list = os.listdir(path)
-	del list[0]
+	if(platform.system() in osList):
+		del list[0]
+		
 	return list
 
-#去掉文件后缀，返回文件名称
+#返回一个数组，保存每次操作前的文件名
+
+#替换文件名中指定的字符串
+def replaceStr(path,oldStr,newStr):
+	newName = []
+	oldName = filesAllName(path)
+	j = 0
+	for i in filesName(path):
+		newName.append(i.split(oldStr)[0]+newStr+i.split(oldStr)[1]+'.'+filesType(path)[j])
+		j = j + 1
+
+	for i in range(len(newName)):
+		os.rename(path+oldName[i], path+newName[i])
+
+	print("成功替换名称！")
+
+
+
+
+
+#去掉文件类型后缀，返回文件名称
 def filesName(path):
 	tmp = []
 	list = filesAllName(path)
@@ -36,48 +74,65 @@ def filesName(path):
 
 #返回文件类型
 def filesType(path):
+	tmp = []
 	list = filesAllName(path)
-	tmp = list[0].split('.')[1]
+	for i in range(len(list)):
+		tmp.append(list[i].split('.')[1])
 	return tmp
 
 #统一添加文件名后缀
 def addStr(path,lastStr):
 	newName = []
+	oldName = filesAllName(path)
+	j = 0
 	for i in filesName(path):
-		newName.append(i+lastStr+'.'+filesType(path))
+		newName.append(i+lastStr+'.'+filesType(path)[j])
+		j = j + 1
 
 	for i in range(len(newName)):
-		os.rename(path+filesAllName(path)[i], path+newName[i])
+		os.rename(path+oldName[i], path+newName[i])
 
+	print("成功添加后缀！")
 
-#统一添加文件名后缀
+#统一添加文件名前缀
+def addFirstStr(path,firstStr):
+	newName = []
+	oldName = filesAllName(path)
+	j = 0
+	for i in filesName(path):
+		newName.append(firstStr+i+'.'+filesType(path)[j])
+		j = j + 1
+
+	for i in range(len(newName)):
+		os.rename(path+oldName[i], path+newName[i])
+
+	print("成功添加前缀！")
+
+#统一修改文件名后缀
 def addFilesType(path,filesType):
 	newName = []
+	oldName = filesAllName(path)
 	for i in filesName(path):
 		newName.append(i+'.'+filesType)
 
 	for i in range(len(newName)):
-		os.rename(path+filesAllName(path)[i], path+newName[i])
+		os.rename(path+oldName[i], path+newName[i])
+
+	print("成功修改文件类型！")
 
 
-addFilesType(path,'png')
-# #统一添加文件名前缀
-# def addFirstStr(path,firstStr):
-# 	newName = []
-# 	for i in filesName(path):
-# 		newName.append(firstStr+i+'.'+filesType(path))
+# setUpFiles(path, hrefStr) 
 
-# 	for i in range(len(newName)):
-# 		print(path+filesAllName(path)[i])
-# 		print(path+newName[i])
-# 		os.rename(path+filesAllName(path)[i], path+newName[i])
+# addFilesType(path,'png')
 
-# 	print('前缀添加成功！')
+# addFirstStr(path, '')
 
 
-# addFirstStr(path, 'first_')
-
-# addFirstStr(path,'xx')
 # addStr(path,'hh')
-# setUpFiles(path, hrefStr)
+# for i in pathList:
+# 	path = supPath+i+'/'
+# 	replaceStr(path,'_黑马程序员_', '_')
+
+# replaceStr(path, '_黑马程序员_', '_')
+
 # print(os.listdir(path))
